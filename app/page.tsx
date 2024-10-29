@@ -1,10 +1,10 @@
-import { Trophy } from "lucide-react";
-import Image from "next/image";
-
-export default function Home() {
+const HomePage = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1>Basic project</h1>
-    </main>
+    <div className="p-8">
+      <h2 className="text-2xl font-bold mb-4">Bienvenue sur GarageConnect</h2>
+      <p><a href="/login" className="text-blue-500 hover:underline">Connectez-vous</a> pour gérer vos réparations et clients.</p>
+    </div>
   );
-}
+};
+
+export default HomePage;

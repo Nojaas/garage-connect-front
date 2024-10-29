@@ -1,8 +1,9 @@
-// firebaseConfig.ts
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { initializeApp } from 'firebase/app';
+import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFunctions } from 'firebase/functions';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -13,12 +14,11 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Firebase services
 const auth = getAuth(app);
 const db = getFirestore(app);
+const functions = getFunctions(app);
 const storage = getStorage(app);
+const messaging = getMessaging(app);
 
-export { auth, db, storage };
+export { auth, db, storage, app, functions, messaging };
