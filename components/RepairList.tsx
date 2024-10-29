@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -79,9 +80,11 @@ export default function RepairList({
     <div className="container mx-auto p-4 bg-white">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" onClick={() => router.push('/dashboard')}>
-            <ArrowLeft className="h-5 w-5 mr-1" />
-          </Button>
+          <Link href="/dashboard" aria-label="Retour sur le dashboard">
+            <Button variant="ghost">
+              <ArrowLeft className="h-5 w-5 mr-1" />
+            </Button>
+          </Link>
           <h1 className="text-2xl font-bold">Liste des Réparations</h1>
         </div>
         <NewRepair />

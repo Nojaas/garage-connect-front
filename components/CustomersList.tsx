@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -38,13 +39,11 @@ export default function CustomersList({ clients }: { clients: Client[] }) {
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Button
-            variant="ghost"
-            onClick={() => router.push('/dashboard')}
-            aria-label="Retour au tableau de bord"
-          >
-            <ArrowLeft className="h-5 w-5 mr-1" />
-          </Button>
+          <Link href="/dashboard" aria-label="Retour sur le dashboard">
+            <Button variant="ghost">
+              <ArrowLeft className="h-5 w-5 mr-1" />
+            </Button>
+          </Link>
           <CardTitle>Clients</CardTitle>
         </div>
         <NewCustomer />

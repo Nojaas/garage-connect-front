@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '../../../contexts/AuthContext';
 import { db } from '../../../utils/firebase';
@@ -101,9 +102,11 @@ export default function CustomerDetailPage() {
     <Card className="w-full max-w-md mx-auto mt-8">
       <CardHeader>
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" onClick={() => router.push('/customers')}>
-            <ArrowLeft className="h-5 w-5 mr-1" />
-          </Button>
+          <Link href="/customers" aria-label="Retour à la liste des clients">
+            <Button variant="ghost">
+              <ArrowLeft className="h-5 w-5 mr-1" />
+            </Button>
+          </Link>
           <CardTitle>Détails du Client</CardTitle>
         </div>
       </CardHeader>

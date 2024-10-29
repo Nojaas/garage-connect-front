@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'
+import Link from 'next/link';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -25,9 +26,11 @@ export default function VehiclesList({ vehicles, searchTerm, setSearchTerm }: Ve
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" onClick={() => router.push('/dashboard')}>
-            <ArrowLeft className="h-5 w-5 mr-1" />
-          </Button>
+          <Link href="/dashboard" aria-label="Retour sur le dashboard">
+            <Button variant="ghost">
+              <ArrowLeft className="h-5 w-5 mr-1" />
+            </Button>
+          </Link>
           <CardTitle>Véhicules</CardTitle>
         </div>
         <NewVehicle />

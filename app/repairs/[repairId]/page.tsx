@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '../../../contexts/AuthContext';
 import { db } from '../../../utils/firebase';
@@ -108,9 +109,11 @@ export default function RepairDetailPage() {
     <Card className="w-full max-w-md mx-auto mt-8">
       <CardHeader>
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" onClick={() => router.push('/repairs')}>
-            <ArrowLeft className="h-5 w-5 mr-1" />
-          </Button>
+          <Link href="/repairs" aria-label="Retour à la liste des réparations">
+            <Button variant="ghost" onClick={() => router.push('/repairs')}>
+              <ArrowLeft className="h-5 w-5 mr-1" />
+            </Button>
+          </Link>
           <CardTitle>Détails de la Réparation</CardTitle>
         </div>
       </CardHeader>

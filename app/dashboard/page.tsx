@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { db } from '../../utils/firebase';
@@ -54,36 +55,44 @@ export default function DashboardPage() {
   return (
     <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card onClick={() => router.push('/customers')} className="cursor-pointer hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Clients</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{clientCount}</div>
-            <p className="text-xs text-muted-foreground">Total des clients enregistrés</p>
-          </CardContent>
-        </Card>
-        <Card onClick={() => router.push('/repairs')} className="cursor-pointer hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Réparations Actives</CardTitle>
-            <Wrench className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{repairCount}</div>
-            <p className="text-xs text-muted-foreground">Réparations en cours</p>
-          </CardContent>
-        </Card>
-        <Card onClick={() => router.push('/vehicles')} className="cursor-pointer hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Véhicules enregistrés</CardTitle>
-            <Car className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{vehicleCount}</div>
-            <p className="text-xs text-muted-foreground">Total des véhicules enregistrés</p>
-          </CardContent>
-        </Card>
+        <Link href="/customers">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Clients</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{clientCount}</div>
+              <p className="text-xs text-muted-foreground">Total des clients enregistrés</p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/repairs">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Réparations Actives</CardTitle>
+              <Wrench className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{repairCount}</div>
+              <p className="text-xs text-muted-foreground">Réparations en cours</p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/vehicles">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Véhicules enregistrés</CardTitle>
+              <Car className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{vehicleCount}</div>
+              <p className="text-xs text-muted-foreground">Total des véhicules enregistrés</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
       <div className="mt-8">
         <h2 className="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">Activité récente</h2>
