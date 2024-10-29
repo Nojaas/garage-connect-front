@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { db, auth } from '../utils/firebase';
+import { useAuth } from '@contexts/AuthContext';
+import { db, auth } from '@utils/firebase';
 import { setDoc, doc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";

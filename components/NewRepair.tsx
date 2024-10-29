@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useAuth } from '../contexts/AuthContext';
-import { db } from '../utils/firebase';
+import { useAuth } from '@contexts/AuthContext';
+import { db } from '@utils/firebase';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";

@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../../contexts/AuthContext';
-import { db } from '../../utils/firebase';
+import { useAuth } from '@contexts/AuthContext';
+import { db } from '@utils/firebase';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import VehiclesList from 'components/VehiclesList';
 

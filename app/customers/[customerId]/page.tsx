@@ -3,15 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
-import { useAuth } from '../../../contexts/AuthContext';
-import { db } from '../../../utils/firebase';
+import { useAuth } from '@contexts/AuthContext';
+import { db } from '@utils/firebase';
 import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { Card, CardHeader, CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Save, ArrowLeft } from 'lucide-react';
-import CustomerForm from 'components/CustomerForm';
-import DeleteConfirmationDialog from 'components/DeleteConfirmationDialog';
-import NotificationMessage from 'components/NotificationMessage';
+import CustomerForm from '@components/CustomerForm';
+import DeleteConfirmationDialog from '@components/DeleteConfirmationDialog';
+import NotificationMessage from '@components/NotificationMessage';
 
 type Customer = {
   name: string;

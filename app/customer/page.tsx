@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../../contexts/AuthContext';
-import { db } from '../../utils/firebase';
+import { useAuth } from '@contexts/AuthContext';
+import { db } from '@utils/firebase';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import ClientRepairsList from 'components/CustomerRepairsList';
 import CustomerChat from 'components/CustomerChat';

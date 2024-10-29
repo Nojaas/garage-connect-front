@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
-import { useAuth } from '../../../contexts/AuthContext';
-import { db } from '../../../utils/firebase';
+import { useAuth } from '@contexts/AuthContext';
+import { db } from '@utils/firebase';
 import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { Card, CardHeader, CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

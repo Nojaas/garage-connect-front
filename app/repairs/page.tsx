@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { db } from '../../utils/firebase';
+import { db } from '@utils/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import RepairList from 'components/RepairList';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '@contexts/AuthContext';
 
 interface Repair {
   id: string;
