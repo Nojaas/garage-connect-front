@@ -1,63 +1,78 @@
+# 🚗 Garage Connect - Suivi des réparations en ligne
 
-# Next.js Starter Project
+Bienvenue sur **Garage Connect**, une plateforme permettant aux garagistes et à leurs clients de suivre l'état des réparations, d'accéder à l'historique des véhicules, et de communiquer facilement à tout moment. Voici un récapitulatif des technologies utilisées et des fonctionnalités offertes par l'application.
 
-Ce projet est un template de base pour les applications développées avec Next.js. Il est conçu pour servir de point de départ pour tous vos futurs projets en simplifiant la configuration initiale et en standardisant la structure du code.
+## 🔧 Technologies Utilisées
 
-## Prérequis
+- **Backend :** Node.js (Firebase Functions)
+- **Base de Données :** Firebase Firestore
+- **Stockage :** Firebase Storage
+- **Authentification :** Firebase Authentication
+- **Frontend :** React.js (Next.js, Tailwind CSS)
+- **Déploiement :** Vercel
 
-Avant de commencer, assurez-vous d'avoir installé Node.js sur votre machine. Node.js 12.0 ou une version ultérieure est nécessaire pour utiliser Next.js.
+## ✨ Fonctionnalités
 
-## Installation ✨
+### 🛠️ Partie Garagiste
 
-Pour installer les dépendances du projet, exécutez la commande suivante :
+1. **Suivi des réparations :**
+   - Interface permettant de suivre les étapes des réparations en cours.
+   - Mise à jour de l'état de la réparation (en attente, en cours, terminé), visible par le client.
+   - Envoi de photos des réparations pour plus de transparence via Firebase Storage.
 
-```bash
-npm install
-```
+2. **Gestion des clients et des véhicules :**
+   - Création de fiches clients et gestion des informations sur chaque client.
+   - Historique des interventions pour chaque véhicule.
 
-ou si vous utilisez yarn :
+3. **Support client :**
+   - Chat en ligne avec les clients pour répondre aux questions et fournir des conseils.
 
-```bash
-yarn install
-```
+### 👤 Partie Client
 
-## Configuration
+1. **Suivi des réparations :**
+   - Accès à l'état de la réparation de leur véhicule.
+   - Possibilité de voir des photos des réparations en cours.
 
-Vous pouvez configurer votre application en modifiant les variables d'environnement. Créez un fichier `.env.local` à la racine du projet et ajoutez vos variables :
+2. **Historique des véhicules :**
+   - Accès à l'historique complet des réparations pour chaque véhicule associé au compte.
 
-```plaintext
-API_URL=https://example.com/api
-```
+3. **Support client :**
+   - Chat en ligne avec le garage pour poser des questions ou obtenir des conseils.
 
-Remplacez `https://example.com/api` par l'URL de votre choix.
+## 🚀 Comment démarrer ?
+Pour exécuter l'application en local, vous aurez besoin de Node.js.
 
-## Démarrage du serveur de développement
+### installation
 
-Pour lancer le serveur de développement, exécutez :
+1. **Installez les dépendances :**
 
-```bash
-npm run dev
-```
+   ```bash
+   npm install
+   ```
 
-ou si vous utilisez yarn :
+2. **Configurer les variables d'environnement :**
+   - Créez un fichier `.env.local` à la racine du projet.
+   - Ajoutez vos clés de configuration Firebase et autres paramètres requis dans ce fichier.
 
-```bash
-yarn dev
-```
+### Lancer l'application
 
-Votre application sera accessible à l'adresse [http://localhost:3001](http://localhost:3001).
+1. **Démarrer l'application en mode développement :**
+
+   ```bash
+   npm run dev
+   ```
+
+2. **Accéder à l'application :**
+   - Ouvrez votre navigateur et accédez à `http://localhost:3001`.
 
 ## Structure du projet
 
 Voici la structure de base du projet :
 
 - `app/` : Contient les pages de votre application. `app/page.tsx` est la page d'accueil.
-- `components/` : Répertoire pour vos composants réutilisables.
+- `components/` : Répertoire pour vos composants.
 - `public/` : Pour les fichiers statiques comme les images.
 
-## Déploiement 🚀
-
-Pour déployer votre application, vous pouvez utiliser Vercel, une plateforme cloud optimisée pour les applications Next.js. Consultez la [documentation officielle de Vercel](https://vercel.com/docs) pour plus d'informations.
 
 ## More libraries 🎨
 
