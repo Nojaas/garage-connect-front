@@ -1,15 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { db } from '@utils/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import RepairList from 'components/RepairList';
 import { useAuth } from '@contexts/AuthContext';
 
 interface Repair {
   id: string;
   description: string;
+  vehicleId: string;
+  clientId: string;
+  startDate: any; 
   status: string;
   garageId: string;
 }
@@ -18,6 +21,7 @@ interface Vehicle {
   id: string;
   make: string;
   model: string;
+  licensePlate: string;
   garageId: string;
 }
 
@@ -45,28 +49,32 @@ export default function RepairsPage() {
       return;
     }
 
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+    setLoading(true);
 
-        const [repairsSnapshot, vehiclesSnapshot, clientsSnapshot] = await Promise.all([
-          getDocs(query(collection(db, 'repairs'), where('garageId', '==', user.uid))),
-          getDocs(query(collection(db, 'vehicles'), where('garageId', '==', user.uid))),
-          getDocs(query(collection(db, 'clients'), where('garageId', '==', user.uid))),
-        ]);
+    const repairsQuery = query(collection(db, 'repairs'), where('garageId', '==', user.uid));
+    const unsubscribeRepairs = onSnapshot(repairsQuery, (snapshot) => {
+      setRepairs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Repair)));
+      setLoading(false);
+    }, (error) => {
+      console.error("Erreur lors de la récupération des réparations :", error);
+      setLoading(false);
+    });
 
-        setRepairs(repairsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Repair)));
-        setVehicles(vehiclesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Vehicle)));
-        setClients(clientsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Client)));
+    const vehiclesQuery = query(collection(db, 'vehicles'), where('garageId', '==', user.uid));
+    const unsubscribeVehicles = onSnapshot(vehiclesQuery, (snapshot) => {
+      setVehicles(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Vehicle)));
+    });
 
-        setLoading(false);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des données :", error);
-        setLoading(false);
-      }
+    const clientsQuery = query(collection(db, 'clients'), where('garageId', '==', user.uid));
+    const unsubscribeClients = onSnapshot(clientsQuery, (snapshot) => {
+      setClients(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Client)));
+    });
+
+    return () => {
+      unsubscribeRepairs();
+      unsubscribeVehicles();
+      unsubscribeClients();
     };
-
-    fetchData();
   }, [user, authLoading, router]);
 
   return (

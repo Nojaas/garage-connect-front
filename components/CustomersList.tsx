@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -17,7 +17,11 @@ type Client = {
   phone: string;
 };
 
-export default function CustomersList({ clients }: { clients: Client[] }) {
+type CustomersListProps = {
+  clients: Client[];
+};
+
+export default function CustomersList({ clients }: CustomersListProps) {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState<string>('');
 

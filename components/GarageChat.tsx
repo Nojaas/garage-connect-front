@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { db } from '@utils/firebase';
-import { useAuth } from '@contexts/AuthContext';
 import { collection, query, where, onSnapshot, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,23 +21,26 @@ type Chat = {
   messages: Message[];
 };
 
-export default function GarageChat() {
-  const { user } = useAuth();
+type GarageChatProps = {
+  garageId: string;
+};
+
+export default function GarageChat({ garageId }: GarageChatProps) {
   const [conversations, setConversations] = useState<Chat[]>([]);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [newMessage, setNewMessage] = useState<string>('');
 
   useEffect(() => {
-    if (!user) return;
-    const chatsQuery = query(collection(db, 'chats'), where('garageId', '==', user.uid));
+    if (!garageId) return;
+    const chatsQuery = query(collection(db, 'chats'), where('garageId', '==', garageId));
     const unsubscribe = onSnapshot(chatsQuery, (snapshot) => {
       const chatsData: Chat[] = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chat));
       setConversations(chatsData);
     });
 
     return () => unsubscribe();
-  }, [user]);
+  }, [garageId]);
 
   useEffect(() => {
     if (selectedChatId) {
@@ -58,13 +60,13 @@ export default function GarageChat() {
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !selectedChatId || !user) return;
+    if (!newMessage.trim() || !selectedChatId) return;
 
     try {
       const chatDocRef = doc(db, 'chats', selectedChatId);
       await updateDoc(chatDocRef, {
         messages: arrayUnion({
-          senderId: user.uid,
+          senderId: garageId,
           content: newMessage,
           timestamp: new Date().toISOString(),
           type: 'text',
@@ -115,8 +117,8 @@ export default function GarageChat() {
             <CardContent>
               <div className="h-64 overflow-y-auto border p-2 mb-4">
                 {selectedChat.messages.map((message, index) => (
-                  <div key={index} className={`mb-2 ${message.senderId === user?.uid ? 'text-right' : 'text-left'}`}>
-                    <p className={`inline-block px-4 py-2 rounded-md ${message.senderId === user?.uid ? 'bg-blue-200' : 'bg-gray-200'}`}>
+                  <div key={index} className={`mb-2 ${message.senderId === garageId ? 'text-right' : 'text-left'}`}>
+                    <p className={`inline-block px-4 py-2 rounded-md ${message.senderId === garageId ? 'bg-blue-200' : 'bg-gray-200'}`}>
                       {message.content}
                     </p>
                     <span className="block text-xs text-gray-500 mt-1">
