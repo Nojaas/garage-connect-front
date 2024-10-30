@@ -84,6 +84,15 @@ export default function CustomerDetailPage() {
     try {
       const customerRef = doc(db, 'clients', customerId as string);
       await deleteDoc(customerRef);
+  
+      await fetch(`${process.env.NEXT_PUBLIC_CLOUD_FUNCTION_URL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ customerId }),
+      });
+  
       setMessage({ type: 'success', content: 'Client supprimé avec succès' });
       setTimeout(() => {
         router.push('/customers');
