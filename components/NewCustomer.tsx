@@ -17,6 +17,7 @@ export default function NewCustomer() {
     phone: '',
   });
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { user } = useAuth();
 
   const generateRandomPassword = (length = 12) => {
@@ -38,6 +39,7 @@ export default function NewCustomer() {
     }
 
     try {
+      setIsSubmitting(true);
       const tempPassword = generateRandomPassword();
 
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, tempPassword);
@@ -60,6 +62,8 @@ export default function NewCustomer() {
     } catch (error) {
       console.error("Erreur lors de la création de la fiche client :", error);
       alert("Une erreur est survenue lors de la création de la fiche client. Veuillez réessayer.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -86,7 +90,9 @@ export default function NewCustomer() {
               />
             </div>
           ))}
-          <Button type="submit">Ajouter le Client</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'En cours...' : 'Ajouter le Client'}
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

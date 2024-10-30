@@ -1,61 +1,48 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@contexts/AuthContext';
 import { db } from '@utils/firebase';
-import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
-import ClientRepairsList from 'components/CustomerRepairsList';
-import CustomerChat from 'components/CustomerChat';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import CustomersList from 'components/CustomersList';
 
-export default function CustomerPage() {
-  const [vehicles, setVehicles] = useState<any[]>([]);
-  const [customerName, setCustomerName] = useState<string>('');
-  const [garageId, setGarageId] = useState<string>('');
-  const { user, loading: authLoading } = useAuth();
+type Client = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+};
+
+export default function CustomersPage() {
+  const [clients, setClients] = useState<Client[]>([]);
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!loading && !user) {
       router.push('/login');
     } else if (user) {
-      fetchCustomerData(user.uid);
-      fetchVehicles(user.uid);
-    }
-  }, [user, authLoading, router]);
+      const q = query(collection(db, 'clients'), where('garageId', '==', user.uid));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const clientsData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        } as Client));
+        setClients(clientsData);
+      });
 
-  const fetchCustomerData = async (clientId: string) => {
-    try {
-      const clientDoc = await getDoc(doc(db, 'clients', clientId));
-      if (clientDoc.exists()) {
-        const clientData = clientDoc.data();
-        setCustomerName(clientData.name);
-        setGarageId(clientData.garageId); // Récupérer l'ID du garage
-      }
-    } catch (error) {
-      console.error("Erreur lors de la récupération des informations du client :", error);
+      return () => unsubscribe();
     }
-  };
+  }, [user, loading, router]);
 
-  const fetchVehicles = async (clientId: string) => {
-    try {
-      const vehiclesQuery = query(collection(db, 'vehicles'), where('clientId', '==', clientId));
-      const vehiclesSnapshot = await getDocs(vehiclesQuery);
-      const vehiclesData = vehiclesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setVehicles(vehiclesData);
-    } catch (error) {
-      console.error("Erreur lors de la récupération des véhicules :", error);
-    }
-  };
-
-  if (authLoading) {
+  if (loading) {
     return <div className="flex items-center justify-center min-h-screen">Chargement...</div>;
   }
 
   return (
-    <div className="p-8 space-y-8">
-      <ClientRepairsList vehicles={vehicles} customerName={customerName} />
-      {garageId && <CustomerChat garageId={garageId} />} {/* Intégration du composant CustomerChat */}
+    <div className="p-8">
+      <CustomersList clients={clients} />
     </div>
   );
 }
