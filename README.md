@@ -73,6 +73,77 @@ Voici la structure de base du projet :
 - `components/` : Répertoire pour vos composants.
 - `public/` : Pour les fichiers statiques comme les images.
 
+# 🔒 Règles Firestore pour Garage Connect
+
+```firestore
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Règles pour la collection des garagistes
+    match /garagistes/{garageId} {
+      // Lecture : Le garagiste connecté peut lire ses propres informations
+      allow read: if request.auth != null && request.auth.uid == garageId;
+
+      // Écriture : Le garagiste peut modifier ses propres informations
+      allow write: if request.auth != null && request.auth.uid == garageId;
+    }
+
+    // Règles pour la collection des clients
+    match /clients/{clientId} {
+      // Lecture : Le garagiste ou le client peut lire le document client associé
+      allow read: if request.auth != null && (resource.data.garageId == request.auth.uid || request.auth.uid == clientId);
+
+      // Création : Autoriser la création par tout utilisateur connecté (le rôle est deja validé côté application)
+      allow create: if request.auth != null;
+
+      // Modification et suppression : Seul le garagiste associé peut mettre à jour ou supprimer le client
+      allow update, delete: if request.auth != null && resource.data.garageId == request.auth.uid;
+    }
+
+    // Règles pour la collection des véhicules
+    match /vehicles/{vehicleId} {
+      // Lecture : Le garagiste ou le client peut lire les documents liés à leur garage ou véhicule
+      allow read: if request.auth != null && (request.auth.uid == resource.data.garageId || request.auth.uid == resource.data.clientId);
+
+      // Écriture : Permettre au garagiste d'écrire un nouveau document si l'utilisateur est authentifié et que le garageId correspond à son propre ID
+      allow create: if request.auth != null && request.resource.data.garageId == request.auth.uid;
+
+      // Modification et suppression : Le garagiste peut modifier/supprimer un véhicule s'il est lié à son propre garage
+      allow update, delete: if request.auth != null && resource.data.garageId == request.auth.uid;
+    }
+    
+    // Règles pour les chats
+    match /chats/{chatId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Règles pour les messages d'un chat
+    match /chats/{chatId}/messages/{messageId} {
+      // Autoriser la lecture des messages si l'utilisateur est authentifié
+      allow read: if request.auth != null;
+
+      // Autoriser l'écriture des messages si l'utilisateur est authentifié
+      allow write: if request.auth != null && request.auth.uid in resource.data.participants;
+    }
+
+    // Règles pour la collection des réparations
+    match /repairs/{repairId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == resource.data.garageId || 
+        exists(/databases/$(database)/documents/vehicles/$(resource.data.vehicleId)) &&
+        get(/databases/$(database)/documents/vehicles/$(resource.data.vehicleId)).data.clientId == request.auth.uid
+      );
+
+      // Création : Permettre au garagiste de créer une réparation s'il est authentifié et que son `garageId` correspond
+      allow create: if request.auth != null && request.resource.data.garageId == request.auth.uid;
+
+      // Modification et suppression : Le garagiste peut modifier/supprimer une réparation s'il est associé à son propre garage
+      allow update, delete: if request.auth != null && resource.data.garageId == request.auth.uid;
+    }
+  }
+}
+```
 
 ## More libraries 🎨
 
