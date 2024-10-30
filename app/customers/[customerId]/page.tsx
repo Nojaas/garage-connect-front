@@ -85,7 +85,7 @@ export default function CustomerDetailPage() {
       const customerRef = doc(db, 'clients', customerId as string);
       await deleteDoc(customerRef);
   
-      await fetch(`${process.env.NEXT_PUBLIC_CLOUD_FUNCTION_URL}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_DELETE_CUSTOMER_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

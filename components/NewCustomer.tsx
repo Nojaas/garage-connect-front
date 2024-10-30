@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { useAuth } from '@contexts/AuthContext';
-import { db, auth } from '@utils/firebase';
-import { setDoc, doc } from 'firebase/firestore';
-import { createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { auth, db } from '@utils/firebase';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +17,7 @@ export default function NewCustomer() {
   });
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
   const { user } = useAuth();
 
   const generateRandomPassword = (length = 12) => {
@@ -28,6 +28,10 @@ export default function NewCustomer() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === 'phone') {
+      setPhoneError(null); 
+    }
   };
 
   const handleCreateClient = async (e: React.FormEvent) => {
@@ -42,20 +46,36 @@ export default function NewCustomer() {
       setIsSubmitting(true);
       const tempPassword = generateRandomPassword();
 
-      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, tempPassword);
-      const clientAuthUser = userCredential.user;
+      let phone = formData.phone.trim();
+      if (phone && !phone.startsWith('+')) {
+        phone = '+33' + phone;
+      }
 
-      await setDoc(doc(db, 'clients', clientAuthUser.uid), {
-        clientId: clientAuthUser.uid,
-        garageId: user.uid,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        role: 'client',
-        createdAt: new Date(),
+      if (phone.length < 10) {
+        setPhoneError("Le numéro de téléphone est trop court. Veuillez vérifier et réessayer.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CREATE_CUSTOMER_URL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: tempPassword,
+          name: formData.name,
+          phone,
+          garageId: user.uid,
+        }),
       });
 
-      await sendPasswordResetEmail(auth, formData.email);
+      if (response.ok) {
+        await sendPasswordResetEmail(auth, formData.email);
+      } else {
+        throw new Error('Erreur lors de la création du client');
+      }
 
       setFormData({ name: '', email: '', phone: '' });
       setIsOpen(false);
@@ -88,6 +108,9 @@ export default function NewCustomer() {
                 onChange={handleInputChange}
                 required
               />
+              {field === 'phone' && phoneError && (
+                <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+              )}
             </div>
           ))}
           <Button type="submit" disabled={isSubmitting}>
